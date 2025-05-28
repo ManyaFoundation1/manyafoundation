@@ -36,7 +36,7 @@ app.post("/initiate-payment", async (req, res) => {
       }
     };
 
-    const response = await fetch("https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2/pay", {
+    const response = await fetch("https://api.phonepe.com/apis/pg/checkout/v2/pay", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
