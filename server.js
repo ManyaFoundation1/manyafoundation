@@ -64,7 +64,34 @@ app.post("/initiate-payment", async (req, res) => {
 
 // Optional route for thank-you page (if needed)
 app.get("/thankyou", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "thankyou.html"));
+  res.sendFile(path.join(__dirname, "public", "thank-you.html"));
+});
+
+app.get("/check-payment-status", async (req, res) => {
+  const merchantId = "YOUR_MERCHANT_ID"; // e.g. TEST-xxxxxx
+  const transactionId = req.query.orderId;
+  const saltKey = process.env.SALT_KEY;
+  const saltIndex = process.env.SALT_INDEX;
+
+  const path = `/pg/v1/status/${merchantId}/${transactionId}`;
+  const xVerify = crypto.createHash("sha256").update(path + saltKey).digest("hex") + "###" + saltIndex;
+
+  const statusUrl = `https://api-preprod.phonepe.com${path}`;
+
+  try {
+    const response = await fetch(statusUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-VERIFY": xVerify
+      }
+    });
+
+    const result = await response.json();
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // Start server
