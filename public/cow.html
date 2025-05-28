@@ -169,6 +169,9 @@
   </footer>
 
   <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const isDev = urlParams.get('dev') === 'true';
+
     function setAmount(value) {
       const amountInput = document.getElementById('amount');
       amountInput.value = value;
@@ -180,11 +183,32 @@
       document.getElementById('totalDisplay').textContent = `Donation Total: ₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
     }
 
-  
-    
-    
-    
-    const formData = new FormData(e.target);
+    function validateAndUpdate() {
+      const amountField = document.getElementById('amount');
+      const donateBtn = document.getElementById('donateBtn');
+      const errorMsg = document.getElementById('amountError');
+      const value = parseFloat(amountField.value || 0);
+
+      if (value >= 200 || isDev) {
+        errorMsg.style.display = "none";
+        updateTotal(value);
+        donateBtn.disabled = false;
+      } else {
+        errorMsg.style.display = "block";
+        updateTotal(0);
+        donateBtn.disabled = true;
+      }
+    }
+
+    document.getElementById('donationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const amountValue = parseFloat(document.getElementById('amount').value);
+      if (amountValue < 200 && !isDev) {
+        alert("Minimum donation amount is ₹200 🙏");
+        return;
+      }
+
+      const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
       fetch("https://manyafoundation.onrender.com/initiate-payment", {
@@ -196,7 +220,7 @@
       })
       .then(res => res.json())
       .then(response => {
-        if(response.success && response.redirectUrl) {
+        if (response.success && response.redirectUrl) {
           window.location.href = response.redirectUrl;
         } else {
           alert("Failed to initiate payment.");
