@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donate to Feed Hungry Cows</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    nav {
+      background-color: #fff;
+      padding: 15px 30px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav h1 {
+      color: #e53935;
+      font-size: 24px;
+      margin: 0;
+    }
+    nav a {
+      text-decoration: none;
+      color: #fff;
+      background-color: #e53935;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: 500;
+    }
+    .hero {
+      background: #fff4e5;
+      padding: 80px 30px 40px;
+      text-align: center;
+      color: #6d4c41;
+    }
+    .hero h2 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 18px;
+      margin-top: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: -30px auto 30px auto;
+      background: #fff;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    h3 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .donation-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .donation-options button {
+      flex: 1 1 45%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #ff7043;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .total-amount {
+      text-align: right;
+      font-weight: bold;
+      color: #e53935;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    .submit-btn {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 18px;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .submit-btn:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+    .submit-btn:hover:not(:disabled) {
+      background-color: #43a047;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #999;
+    }
+    #amountError {
+      color: red;
+      font-size: 14px;
+      margin: -5px 0 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>The Manya Foundation</h1>
+    <a href="#donate">Donate Now</a>
+  </nav>
+
+  <div class="hero">
+    <h2>🙏 Feed Hungry Cows. Get Blessings.</h2>
+    <p>🙏 Please Fill Your Details Below and Choose How Many Cows You Want to Feed.</p>
+  </div>
+
+  <div class="container" id="donate">
+    <h3>How Many Cows Do You Want to Feed?</h3>
+    <div class="donation-options">
+      <button onclick="setAmount(500)">10 Hungry Cows ₹500</button>
+      <button onclick="setAmount(50000)">1000 Cows Blessed ₹50000</button>
+      <button onclick="setAmount(25000)">500 Cows ₹25000</button>
+      <button onclick="setAmount(1250)">25 Cows ₹1250</button>
+      <button onclick="setAmount(2500)">50 Cows ₹2500</button>
+      <button onclick="setAmount(3750)">75 Cows ₹3750</button>
+      <button onclick="setAmount(5000)">100 Cows ₹5000</button>
+    </div>
+
+    <form id="donationForm">
+      <input type="number" id="amount" name="amount" placeholder="Custom Donation Amount (Min ₹200)" required oninput="validateAndUpdate()" />
+      <small id="amountError">❌ Minimum donation amount is ₹200</small>
+
+      <input type="text" name="first_name" placeholder="First Name" required>
+      <input type="text" name="last_name" placeholder="Last Name">
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="tel" name="phone" placeholder="Phone Number" required>
+      <input type="text" name="pan" placeholder="PAN Number (Optional)">
+      <textarea name="address" placeholder="Full Address for 80G Certificate (Optional)"></textarea>
+
+      <div class="total-amount" id="totalDisplay">Donation Total: ₹0.00</div>
+      <button type="submit" class="submit-btn" id="donateBtn" disabled>Donate Now</button>
+    </form>
+  </div>
+
+  <footer>
+    &copy; 2025 The Manya Foundation. All Rights Reserved.
+  </footer>
+
+  <script>
+    function setAmount(value) {
+      const amountInput = document.getElementById('amount');
+      amountInput.value = value;
+      validateAndUpdate();
+    }
+
+    function updateTotal(amount) {
+      const total = parseFloat(amount || 0);
+      document.getElementById('totalDisplay').textContent = `Donation Total: ₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+    }
+
+    function validateAndUpdate() {
+      const amountField = document.getElementById('amount');
+      const donateBtn = document.getElementById('donateBtn');
+      const errorMsg = document.getElementById('amountError');
+      const value = parseFloat(amountField.value || 0);
+
+      if (value >= 200) {
+        errorMsg.style.display = "none";
+        updateTotal(value);
+        donateBtn.disabled = false;
+      } else {
+        errorMsg.style.display = "block";
+        updateTotal(0);
+        donateBtn.disabled = true;
+      }
+    }
+
+    document.getElementById('donationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const amountValue = parseFloat(document.getElementById('amount').value);
+      if (amountValue < 200) {
+        alert("Minimum donation amount is ₹200 🙏");
+        return;
+      }
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      fetch("http://localhost:3000/initiate-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(response => {
+        if(response.success && response.redirectUrl) {
+          window.location.href = response.redirectUrl;
+        } else {
+          alert("Failed to initiate payment.");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

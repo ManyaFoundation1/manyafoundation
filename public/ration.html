@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donate Ration Kits | The Manya Foundation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff8f0;
+      color: #333;
+    }
+    nav {
+      background-color: #fff;
+      padding: 20px 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav h1 {
+      color: #e65100;
+      font-size: 24px;
+    }
+    nav a {
+      text-decoration: none;
+      background: #ff9800;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+    }
+    .hero {
+      background: #fff3e0;
+      padding: 60px 30px 40px;
+      text-align: center;
+      color: #bf360c;
+    }
+    .hero h2 {
+      font-size: 32px;
+    }
+    .hero p {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    .container {
+      max-width: 800px;
+      margin: -30px auto 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .donation-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+    .donation-options button {
+      flex: 1 1 45%;
+      padding: 12px;
+      background: #ff9800;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .total-amount {
+      text-align: right;
+      font-weight: bold;
+      color: #e65100;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    .submit-btn {
+      background: #4caf50;
+      color: white;
+      padding: 12px;
+      border: none;
+      font-size: 18px;
+      border-radius: 6px;
+      width: 100%;
+      cursor: pointer;
+    }
+    .submit-btn:disabled {
+      background: #bbb;
+      cursor: not-allowed;
+    }
+    footer {
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+    }
+    #amountError {
+      color: red;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>The Manya Foundation</h1>
+    <a href="#donate">Donate Now</a>
+  </nav>
+
+  <div class="hero">
+    <h2>🥣 Feed a Hungry Family with Just ₹500</h2>
+    <p>🙏 Fill your details and choose how many families to help today</p>
+  </div>
+
+  <div class="container" id="donate">
+    <div class="donation-options">
+      <button onclick="setAmount(2500)">Feed 5 Families – ₹2500</button>
+      <button onclick="setAmount(5000)">Feed 10 Families – ₹5000</button>
+      <button onclick="setAmount(12500)">Feed 25 Families – ₹12500</button>
+      <button onclick="setAmount(25000)">Feed 50 Families – ₹25000</button>
+      <button onclick="setAmount(50000)">Feed 100 Families – ₹50000</button>
+      <button onclick="setAmount(250000)">Feed 500 Families – ₹250000</button>
+      <button onclick="setAmount(500000)">Feed 1000 Families – ₹500000</button>
+    </div>
+
+    <form id="donationForm">
+      <input type="number" id="amount" name="amount" placeholder="Custom Amount (Min ₹200)" oninput="validateAndUpdate()" required />
+      <small id="amountError">❌ Minimum amount is ₹200</small>
+
+      <input type="text" name="first_name" placeholder="First Name" required />
+      <input type="email" name="email" placeholder="Email ID" required />
+      <input type="tel" name="phone" placeholder="Phone Number" required />
+      <input type="text" name="pan" placeholder="PAN Card Number (Optional)" />
+      <textarea name="address" placeholder="Full Address for 80G Receipt (Optional)"></textarea>
+
+      <div class="total-amount" id="totalDisplay">Total: ₹0.00</div>
+      <button type="submit" class="submit-btn" id="donateBtn" disabled>Donate Now</button>
+    </form>
+  </div>
+
+  <footer>
+    &copy; 2025 The Manya Foundation | KindPath Foundation | Built with Seva 🕊️
+  </footer>
+
+  <script>
+    function setAmount(value) {
+      const amountInput = document.getElementById('amount');
+      amountInput.value = value;
+      validateAndUpdate();
+    }
+
+    function updateTotal(amount) {
+      const total = parseFloat(amount || 0);
+      document.getElementById('totalDisplay').textContent = `Total: ₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+    }
+
+    function validateAndUpdate() {
+      const amountField = document.getElementById('amount');
+      const donateBtn = document.getElementById('donateBtn');
+      const errorMsg = document.getElementById('amountError');
+      const value = parseFloat(amountField.value || 0);
+
+      if (value >= 200) {
+        errorMsg.style.display = "none";
+        updateTotal(value);
+        donateBtn.disabled = false;
+      } else {
+        errorMsg.style.display = "block";
+        updateTotal(0);
+        donateBtn.disabled = true;
+      }
+    }
+
+    document.getElementById('donationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const amountValue = parseFloat(document.getElementById('amount').value);
+      if (amountValue < 200) {
+        alert("Minimum donation amount is ₹200 🙏");
+        return;
+      }
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      fetch("http://localhost:3000/initiate-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(response => {
+        if(response.success && response.redirectUrl) {
+          window.location.href = response.redirectUrl;
+        } else {
+          alert("Failed to initiate payment.");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
