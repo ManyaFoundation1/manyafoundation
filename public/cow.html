@@ -139,18 +139,19 @@
   <div class="container" id="donate">
     <h3>How Many Cows Do You Want to Feed?</h3>
     <div class="donation-options">
+      <button onclick="setAmount(10)">🌱 Test ₹10</button>
       <button onclick="setAmount(500)">10 Hungry Cows ₹500</button>
-      <button onclick="setAmount(50000)">1000 Cows Blessed ₹50000</button>
-      <button onclick="setAmount(25000)">500 Cows ₹25000</button>
       <button onclick="setAmount(1250)">25 Cows ₹1250</button>
       <button onclick="setAmount(2500)">50 Cows ₹2500</button>
       <button onclick="setAmount(3750)">75 Cows ₹3750</button>
       <button onclick="setAmount(5000)">100 Cows ₹5000</button>
+      <button onclick="setAmount(25000)">500 Cows ₹25000</button>
+      <button onclick="setAmount(50000)">1000 Cows Blessed ₹50000</button>
     </div>
 
     <form id="donationForm">
-      <input type="number" id="amount" name="amount" placeholder="Custom Donation Amount (Min ₹200)" required oninput="validateAndUpdate()" />
-      <small id="amountError">❌ Minimum donation amount is ₹200</small>
+      <input type="number" id="amount" name="amount" placeholder="Custom Donation Amount (Min ₹10)" required oninput="validateAndUpdate()" />
+      <small id="amountError">❌ Minimum donation amount is ₹10</small>
 
       <input type="text" name="first_name" placeholder="First Name" required>
       <input type="text" name="last_name" placeholder="Last Name">
@@ -169,9 +170,6 @@
   </footer>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const isDev = urlParams.get('dev') === 'true';
-
     function setAmount(value) {
       const amountInput = document.getElementById('amount');
       amountInput.value = value;
@@ -189,7 +187,7 @@
       const errorMsg = document.getElementById('amountError');
       const value = parseFloat(amountField.value || 0);
 
-      if (value >= 200 || isDev) {
+      if (value >= 10) {
         errorMsg.style.display = "none";
         updateTotal(value);
         donateBtn.disabled = false;
@@ -203,8 +201,8 @@
     document.getElementById('donationForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const amountValue = parseFloat(document.getElementById('amount').value);
-      if (amountValue < 200 && !isDev) {
-        alert("Minimum donation amount is ₹200 🙏");
+      if (amountValue < 10) {
+        alert("Minimum donation amount is ₹10 🙏");
         return;
       }
 
@@ -220,7 +218,7 @@
       })
       .then(res => res.json())
       .then(response => {
-        if (response.success && response.redirectUrl) {
+        if(response.success && response.redirectUrl) {
           window.location.href = response.redirectUrl;
         } else {
           alert("Failed to initiate payment.");
