@@ -139,19 +139,18 @@
   <div class="container" id="donate">
     <h3>How Many Cows Do You Want to Feed?</h3>
     <div class="donation-options">
-      <button onclick="setAmount(10)">🌱 Test ₹10</button>
       <button onclick="setAmount(500)">10 Hungry Cows ₹500</button>
+      <button onclick="setAmount(50000)">1000 Cows Blessed ₹50000</button>
+      <button onclick="setAmount(25000)">500 Cows ₹25000</button>
       <button onclick="setAmount(1250)">25 Cows ₹1250</button>
       <button onclick="setAmount(2500)">50 Cows ₹2500</button>
       <button onclick="setAmount(3750)">75 Cows ₹3750</button>
       <button onclick="setAmount(5000)">100 Cows ₹5000</button>
-      <button onclick="setAmount(25000)">500 Cows ₹25000</button>
-      <button onclick="setAmount(50000)">1000 Cows Blessed ₹50000</button>
     </div>
 
     <form id="donationForm">
-      <input type="number" id="amount" name="amount" placeholder="Custom Donation Amount (Min ₹10)" required oninput="validateAndUpdate()" />
-      <small id="amountError">❌ Minimum donation amount is ₹10</small>
+      <input type="number" id="amount" name="amount" placeholder="Custom Donation Amount (Min ₹200)" required oninput="validateAndUpdate()" />
+      <small id="amountError">❌ Minimum donation amount is ₹200</small>
 
       <input type="text" name="first_name" placeholder="First Name" required>
       <input type="text" name="last_name" placeholder="Last Name">
@@ -181,13 +180,14 @@
       document.getElementById('totalDisplay').textContent = `Donation Total: ₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
     }
 
-    function validateAndUpdate() {
+  
+      function validateAndUpdate() {
       const amountField = document.getElementById('amount');
       const donateBtn = document.getElementById('donateBtn');
       const errorMsg = document.getElementById('amountError');
       const value = parseFloat(amountField.value || 0);
 
-      if (value >= 10) {
+      if (value >= 200) {
         errorMsg.style.display = "none";
         updateTotal(value);
         donateBtn.disabled = false;
@@ -198,15 +198,11 @@
       }
     }
 
-    document.getElementById('donationForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const amountValue = parseFloat(document.getElementById('amount').value);
-      if (amountValue < 10) {
-        alert("Minimum donation amount is ₹10 🙏");
-        return;
-      }
-
-      const formData = new FormData(e.target);
+document.getElementById('donationForm').addEventListener('submit', function(e) { e.preventDefault(); const amountValue = parseFloat(document.getElementById('amount').value); if (amountValue < 200) { alert("Minimum donation amount is ₹200 🙏"); return; }
+      
+    
+    
+    const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
       fetch("https://manyafoundation.onrender.com/initiate-payment", {
