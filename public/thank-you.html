@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Thank You - Verifying Payment</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 50px;
+    }
+    .success { color: green; font-size: 24px; }
+    .failed { color: red; font-size: 24px; }
+  </style>
+</head>
+<body>
+  <h1>Verifying Your Payment... 🔄</h1>
+  <div id="resultMessage"></div>
+
+  <script>
+    const orderId = new URLSearchParams(window.location.search).get('orderId');
+    
+    fetch(`/check-payment-status?orderId=${orderId}`)
+      .then(res => res.json())
+      .then(data => {
+        const msgEl = document.getElementById('resultMessage');
+        if (data.success && data.data && data.data.state === 'COMPLETED') {
+          msgEl.innerHTML = `<p class="success">✅ Thank you! Your donation was successful.</p>`;
+        } else {
+          msgEl.innerHTML = `<p class="failed">❌ Payment failed or not completed. No amount was deducted.</p>`;
+        }
+      })
+      .catch(() => {
+        document.getElementById('resultMessage').innerHTML =
+          `<p class="failed">❌ Could not verify payment. Please contact support if amount was deducted.</p>`;
+      });
+  </script>
+</body>
+</html>
