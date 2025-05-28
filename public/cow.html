@@ -180,25 +180,11 @@
       document.getElementById('totalDisplay').textContent = `Donation Total: ₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
     }
 
-    function validateAndUpdate() {
-      const amountField = document.getElementById('amount');
-      const donateBtn = document.getElementById('donateBtn');
-      const errorMsg = document.getElementById('amountError');
-      const value = parseFloat(amountField.value || 0);
-
-      if (value >= 200) {
-        errorMsg.style.display = "none";
-        updateTotal(value);
-        donateBtn.disabled = false;
-      } else {
-        errorMsg.style.display = "block";
-        updateTotal(0);
-        donateBtn.disabled = true;
-      }
-    }
-
-
-      const formData = new FormData(e.target);
+  
+    
+    
+    
+    const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
 
       fetch("https://manyafoundation.onrender.com/initiate-payment", {
