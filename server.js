@@ -15,7 +15,7 @@ require("dotenv").config();
 
 const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 // Redirect URL after payment
-const REDIRECT_URL = "https://themanyafoundation.org/thankyou"; // update if hosted
+const REDIRECT_URL = "https://donate.themanyafoundation.org/thank-you.html"; // update if hosted
 
 // Payment API
 app.post("/initiate-payment", async (req, res) => {
